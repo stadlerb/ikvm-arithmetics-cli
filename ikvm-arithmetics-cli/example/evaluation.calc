@@ -1,0 +1,6 @@
+module evaluation
+import linearexample
+
+weightedsum(10, 12); 
+weightedsum(0, 1); 
+( weightedsum(1, 0))  ;

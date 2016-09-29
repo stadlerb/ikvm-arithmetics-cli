@@ -1,0 +1,5 @@
+module linearexample
+
+def weightedsum(a, b):
+	2*a + 5*b
+;
