@@ -20,11 +20,9 @@ using org.eclipse.xtext;
 using org.eclipse.xtext.example.arithmetics.arithmetics;
 using org.eclipse.xtext.example.arithmetics.interpreter;
 using org.eclipse.xtext.example.arithmetics;
+using org.eclipse.xtext.xbase.lib;
 
 namespace ikvm_arithmetics_cli {
-
-    using static org.eclipse.xtext.xbase.lib.IterableExtensions;
-
     public class CalculatorCLI {
         static void Main(string[] args) {
             // 1. Parse argument array
@@ -111,31 +109,27 @@ namespace ikvm_arithmetics_cli {
             if (inputResource == null) {
                 throw new InvalidOperationException("No input expression or file defined");
             }
-            var root = head(inputResource.getContents());
-            if (root is org.eclipse.xtext.example.arithmetics.arithmetics.Module) {
-                var rootModule = root as org.eclipse.xtext.example.arithmetics.arithmetics.Module;
 
-                // 1. Add all context modules as imports in order to avoid having to write
-                //    import statements for every context module in the input expression
-                if (isInputExpression) {
-                    importContextResources(rootModule);
-                }
+            var rootModule = inputResource.getContents().head<org.eclipse.xtext.example.arithmetics.arithmetics.Module>();
 
-                // 2. Validate all resources in the resource set and print issues to console
-                var issues = validateResources(resourceSet.getResources().wrap<Resource>());
-                var hasErrors = false;
-                foreach (var issue in issues) {
-                    Console.Error.WriteLine(issue.ToString());
-                    if (issue.getSeverity() == Severity.ERROR) {
-                        hasErrors = true;
-                    }
-                }
+            // 1. Add all context modules as imports in order to avoid having to write
+            //    import statements for every context module in the input expression
+            if (isInputExpression) {
+                importContextResources(rootModule);
+            }
 
-                if (!hasErrors) {
-                    doCalculate(rootModule);
+            // 2. Validate all resources in the resource set and print issues to console
+            var issues = validateResources(resourceSet.getResources().wrap<Resource>());
+            var hasErrors = false;
+            foreach (var issue in issues) {
+                Console.Error.WriteLine(issue.ToString());
+                if (issue.getSeverity() == Severity.ERROR) {
+                    hasErrors = true;
                 }
-            } else {
-                throw new InvalidOperationException();
+            }
+
+            if (!hasErrors) {
+                doCalculate(rootModule);
             }
         }
 
@@ -175,13 +169,11 @@ namespace ikvm_arithmetics_cli {
             var imports = rootModule.getImports();
             foreach (var resource in rootModule.eResource().getResourceSet().getResources().wrap<Resource>()) {
                 if (!resource.Equals(inputResource)) {
-                    var contextRoot = head(resource.getContents());
-                    if (contextRoot is org.eclipse.xtext.example.arithmetics.arithmetics.Module) {
-                        var context = contextRoot as org.eclipse.xtext.example.arithmetics.arithmetics.Module;
-                        var import = ArithmeticsFactory.eINSTANCE.createImport();
-                        import.setModule(context);
-                        imports.add(import);
-                    }
+                    var contextRoot = resource.getContents().head<org.eclipse.xtext.example.arithmetics.arithmetics.Module>();
+                    var context = contextRoot as org.eclipse.xtext.example.arithmetics.arithmetics.Module;
+                    var import = ArithmeticsFactory.eINSTANCE.createImport();
+                    import.setModule(context);
+                    imports.add(import);
                 }
             }
         }
@@ -201,7 +193,7 @@ namespace ikvm_arithmetics_cli {
                 if (evaluation is Evaluation) {
                     var expression = (evaluation as Evaluation).getExpression();
                     var result = interpreter.evaluate(expression);
-                    Console.WriteLine("- " + serializer.serialize(expression, serializerOptions) + ": " + result);
+                    Console.WriteLine($"- {serializer.serialize(expression, serializerOptions)}: {result}");
                 }
             }
         }
@@ -240,15 +232,7 @@ namespace ikvm_arithmetics_cli {
             }
         }
 
-        object IEnumerator.Current {
-            get {
-                if (defined) {
-                    return Current;
-                } else {
-                    throw new InvalidOperationException();
-                }
-            }
-        }
+        object IEnumerator.Current { get; }
 
         public IterableEnumerator(java.lang.Iterable src) {
             this.src = src;
@@ -269,7 +253,7 @@ namespace ikvm_arithmetics_cli {
                     defined = true;
                     return true;
                 } else {
-                    throw new InvalidOperationException();
+                    throw new InvalidCastException();
                 }
             }
             Current = null;
@@ -290,6 +274,15 @@ namespace ikvm_arithmetics_cli {
 
         public static IterableEnumerable<T> wrap<T>(this java.lang.Iterable iterable) where T : class {
             return new IterableEnumerable<T>(iterable);
+        }
+
+        public static T head<T>(this java.lang.Iterable iterable) where T : class {
+            var first = IterableExtensions.head(iterable);
+            if(first is T) {
+                return first as T;
+            } else {
+                throw new InvalidCastException();
+            }
         }
     }
 }
