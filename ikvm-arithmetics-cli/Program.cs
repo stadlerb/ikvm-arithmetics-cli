@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 
 using ikvm.lang;
+using java.math;
 using java.util;
 
 using com.google.inject.name;
@@ -22,7 +23,7 @@ using org.eclipse.xtext.example.arithmetics.interpreter;
 using org.eclipse.xtext.example.arithmetics;
 using org.eclipse.xtext.xbase.lib;
 
-namespace ikvm_arithmetics_cli {
+namespace ArithmeticsCLI {
     public class CalculatorCLI {
         static void Main(string[] args) {
             // 1. Parse argument array
@@ -55,7 +56,7 @@ namespace ikvm_arithmetics_cli {
                     } else {
                         Console.Error.Write(config.GetUsage());
                     }
-                    
+
                     // 6. Perform the calculation
                     cli.calculate();
                 } catch (java.lang.Exception e) {
@@ -92,7 +93,7 @@ namespace ikvm_arithmetics_cli {
         private IResourceValidator validator;
 
         [Inject]
-        private Calculator interpreter;
+        private Interpreter interpreter;
 
         [Inject]
         private ISerializer serializer;
@@ -199,6 +200,68 @@ namespace ikvm_arithmetics_cli {
         }
     }
 
+    public class Interpreter {
+        public BigDecimal evaluate(Expression obj) {
+            return evaluate(obj, new Dictionary<string, BigDecimal>());
+
+        }
+
+        public BigDecimal evaluate(Expression obj, Dictionary<String, BigDecimal> values) {
+            return internalEvaluate(obj as dynamic, values);
+        }
+
+        protected BigDecimal internalEvaluate(NumberLiteral e, Dictionary<String, BigDecimal> values) {
+            return e.getValue();
+        }
+
+        /** 
+         * @param values the currently known values by name 
+         */
+        protected BigDecimal internalEvaluate(FunctionCall e, Dictionary<String, BigDecimal> values) {
+            var func = e.getFunc();
+            if (func is DeclaredParameter) {
+                return values[e.getFunc().getName()];
+            } else if (func is Definition) {
+                var d = func as Definition;
+                var parameters = new Dictionary<String, BigDecimal>();
+
+
+                for (int i = 0; i < e.getArgs().size(); i++) {
+                    var declaredParameter = d.getArgs().get(i) as DeclaredParameter;
+
+                    var result = evaluate(e.getArgs().get(i) as Expression, values);
+                    String name = declaredParameter.getName();
+                    parameters[name] = result;
+
+                }
+                return evaluate(d.getExpr(), new Dictionary<String, BigDecimal>(parameters));
+            } else {
+                return null;
+            }
+        }
+
+
+        protected BigDecimal internalEvaluate(Plus plus, Dictionary<String, BigDecimal> values) {
+            return evaluate(plus.getLeft(), values).add(evaluate(plus.getRight(), values));
+
+        }
+
+        protected BigDecimal internalEvaluate(Minus minus, Dictionary<String, BigDecimal> values) {
+            return evaluate(minus.getLeft(), values).subtract(evaluate(minus.getRight(), values));
+
+        }
+
+        protected BigDecimal internalEvaluate(Div div, Dictionary<String, BigDecimal> values) {
+            return evaluate(div.getLeft(), values).divide(evaluate(div.getRight(), values), 20, RoundingMode.HALF_UP);
+
+        }
+
+        protected BigDecimal internalEvaluate(Multi multi, Dictionary<String, BigDecimal> values) {
+            return evaluate(multi.getLeft(), values).multiply(evaluate(multi.getRight(), values));
+
+        }
+    }
+
     public class IterableEnumerable<T> : IEnumerable<T> where T : class {
         private java.lang.Iterable iterable;
 
@@ -278,7 +341,7 @@ namespace ikvm_arithmetics_cli {
 
         public static T head<T>(this java.lang.Iterable iterable) where T : class {
             var first = IterableExtensions.head(iterable);
-            if(first is T) {
+            if (first is T) {
                 return first as T;
             } else {
                 throw new InvalidCastException();

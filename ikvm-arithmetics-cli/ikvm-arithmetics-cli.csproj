@@ -40,6 +40,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -52,7 +53,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>ikvm_arithmetics_cli.CalculatorCLI</StartupObject>
+    <StartupObject>ArithmeticsCLI.CalculatorCLI</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -167,6 +168,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\ikvm\bin\IKVM.Runtime.JNI.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="org.eclipse.xtext.example.arithmetics">
       <HintPath>..\org.eclipse.xtext.example.arithmetics\target\org.eclipse.xtext.example.arithmetics.dll</HintPath>
     </Reference>
