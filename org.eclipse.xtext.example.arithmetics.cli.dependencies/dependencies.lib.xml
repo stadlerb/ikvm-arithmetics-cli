@@ -1,0 +1,13 @@
+<libs xmlns="http://npanday.apache.org/library-import/1.0.0">
+    <nuget>
+        <package>CommandLineParser</package>
+        <version source="1.9.71" mapTo="1.9.71" />
+        <libDirs>
+            <default>net45</default>
+        </libDirs>
+    </nuget>
+    <nuget>
+        <package>IKVM</package>
+        <version source="8.1.5717.0" mapTo="8.1.5717" />
+    </nuget>
+</libs>
