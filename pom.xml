@@ -10,11 +10,11 @@
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<ikvm.home>${user.home}/ikvm</ikvm.home>
-		<ikvm.dlls.dir>${ikvm.home}/bin</ikvm.dlls.dir>
-		<ikvm.path>${ikvm.home}/bin/ikvmc.exe</ikvm.path>
 		<xtextVersion>2.10.0</xtextVersion>
+		<!-- This has to be overridden in any child project which uses ${rootDir} -->
 		<rootDir>${project.basedir}</rootDir>
+		<keyFileName>sample.snk</keyFileName>
+		<keyFilePath>${rootDir}/${keyFileName}</keyFilePath>
 	</properties>
 
 	<modules>
@@ -30,10 +30,19 @@
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.0.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
 					<version>2.4.3</version>
 				</plugin>
-
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.5.3</version>
+				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>

@@ -1,19 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<parent>
 		<groupId>org.eclipse.xtext.example.arithmetics</groupId>
 		<artifactId>org.eclipse.xtext.example.arithmetics.parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
+	
 	<artifactId>org.eclipse.xtext.example.arithmetics.dotnet</artifactId>
-	<packaging>library</packaging>
+	<packaging>pom</packaging>
 
 	<properties>
 		<ikvm.home>${user.home}/ikvm</ikvm.home>
 		<ikvm.dlls.dir>${ikvm.home}/bin</ikvm.dlls.dir>
 		<ikvm.path>${ikvm.home}/bin/ikvmc.exe</ikvm.path>
-		<rootDir>${project.parent.basedir}</rootDir>
 	</properties>
 
 	<dependencies>
@@ -27,8 +28,16 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.npanday.plugins</groupId>
-				<artifactId>maven-compile-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -40,13 +49,7 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<artifactSet>
-								<excludes>
-									<exclude>org.eclipse.xtext.example.arithmetics:org.eclipse.xtext.example.arithmetics.dotnet</exclude>
-								</excludes>
-							</artifactSet>
 							<createDependencyReducedPom>false</createDependencyReducedPom>
-							<outputFile>${project.build.directory}/${project.build.finalName}-shaded.jar</outputFile>
 							<filters>
 								<filter>
 									<artifact>*:*</artifact>
@@ -78,7 +81,7 @@
 								<argument>-target:library</argument>
 								<argument>-keyfile:${keyFilePath}</argument>
 								<argument>-out:${project.artifactId}.dll</argument>
-								<argument>${project.build.finalName}-shaded.jar</argument>
+								<argument>${project.build.finalName}.jar</argument>
 							</arguments>
 						</configuration>
 					</execution>
@@ -119,7 +122,6 @@
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>exec-maven-plugin</artifactId>
-							<version>1.4.0</version>
 							<executions>
 								<execution>
 									<id>ikvmCompile</id>

@@ -9,11 +9,12 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>org.example.ikvmarithmetics.cli</artifactId>
+	<artifactId>org.eclipse.xtext.example.arithmetics.cli</artifactId>
 	<packaging>library</packaging>
 
 	<properties>
 		<ikvm.version>8.1.5717</ikvm.version>
+		<rootDir>${project.parent.basedir}</rootDir>
 	</properties>
 
 	<dependencies>
@@ -208,7 +209,6 @@
 		<sourceDirectory>src/main/csharp</sourceDirectory>
 		<testSourceDirectory>src/test/csharp</testSourceDirectory>
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.npanday.plugins</groupId>
 				<artifactId>maven-compile-plugin</artifactId>
@@ -216,13 +216,14 @@
 					<execution>
 						<id>default-compile</id>
 						<configuration>
-							<!-- <frameworkVersion>4.6.1</frameworkVersion> -->
 							<parameters>
 								<parameter>/langversion:6</parameter>
 							</parameters>
 							<attachPdb>true</attachPdb>
 							<main>ArithmeticsCLI.CalculatorCLI</main>
 							<artifactType>dotnet-executable</artifactType>
+							<keyfile>${keyFilePath}</keyfile>
+							
 						</configuration>
 					</execution>
 				</executions>
@@ -241,6 +242,22 @@
 							<includeTypes>library</includeTypes>
 							<stripVersion>true</stripVersion>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptor>src/assembly/assembly.xml</descriptor>
+				</configuration>
+				<executions>
+					<execution>
+						<id>create-archive</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

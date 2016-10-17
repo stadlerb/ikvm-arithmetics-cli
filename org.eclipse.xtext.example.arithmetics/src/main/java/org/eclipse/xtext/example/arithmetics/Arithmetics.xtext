@@ -13,7 +13,7 @@ generate arithmetics "http://www.eclipse.org/Xtext/example/Arithmetics"
 Module:
 	('module' name=ID)?
 	(imports+=Import)*
-	(statements+=Statement)*;
+	(statements+=Statement (';' statements+=Statement)* '?'?)?;
 
 Import:
 	'import' module=[Module];
@@ -23,7 +23,7 @@ Statement:
 
 Definition:
 	'def' name=ID ('(' args+=DeclaredParameter (',' args+=DeclaredParameter)* ')')?
-	':' expr=Expression ';';
+	':' expr=Expression;
 
 DeclaredParameter:
 	name=ID;
@@ -32,7 +32,7 @@ AbstractDefinition:
 	Definition | DeclaredParameter;
 
 Evaluation:
-	expression=Expression ';';
+	expression=Expression;
 
 Expression:
 	Addition;

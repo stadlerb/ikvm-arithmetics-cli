@@ -55,15 +55,17 @@ namespace ArithmeticsCLI {
                         cli.setInputFile(filename);
                     } else {
                         Console.Error.Write(config.GetUsage());
+                        return;
                     }
 
                     // 6. Perform the calculation
                     cli.calculate();
                 } catch (java.lang.Exception e) {
                     e.printStackTrace();
+                } catch (Exception e) {
+                    Console.Error.Write("Error: " + e.Message);
                 }
             }
-            Console.ReadKey();
         }
     }
 
@@ -80,8 +82,7 @@ namespace ArithmeticsCLI {
 
         [HelpOption]
         public string GetUsage() {
-            return HelpText.AutoBuild(this,
-              (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current), true);
+            return HelpText.AutoBuild(this, current => HelpText.DefaultParsingErrorsHandler(this, current));
         }
     }
 
