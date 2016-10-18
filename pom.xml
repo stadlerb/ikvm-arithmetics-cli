@@ -357,6 +357,28 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</pluginRepository>
+		<pluginRepository>
+			<id>archiva-repository.releases</id>
+			<url>https://archiva-repository.apache.org/archiva/repository/npanday-releases/</url>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>strict</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>archiva-repository.snapshots</id>
+			<url>https://archiva-repository.apache.org/archiva/repository/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<checksumPolicy>strict</checksumPolicy>
+			</snapshots>
+		</pluginRepository>
 	</pluginRepositories>
 
 	<scm>
