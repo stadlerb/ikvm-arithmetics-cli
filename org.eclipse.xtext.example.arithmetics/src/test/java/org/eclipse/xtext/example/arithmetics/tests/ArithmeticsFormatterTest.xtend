@@ -8,6 +8,7 @@
 package org.eclipse.xtext.example.arithmetics.tests
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.example.arithmetics.arithmetics.Module
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
@@ -18,6 +19,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
+import org.eclipse.xtext.example.arithmetics.arithmetics.Evaluation
 
 @RunWith(XtextRunner)
 @InjectWith(ArithmeticsInjectorProvider)
@@ -27,7 +29,7 @@ class ArithmeticsFormatterTest {
     @Inject extension ISerializer serializer
 
     @Test
-    def void myFormatTest() {
+    def void fileFormatTest() {
         '''
             module   evaluation    
                  
@@ -56,9 +58,29 @@ class ArithmeticsFormatterTest {
         ''')
     }
 
-    def void assertFormattedEquals(String input, String expectedFormat) {
-        val module = parseHelper.parse(input)
-        assertEquals(expectedFormat, module?.serialize(SaveOptions::newBuilder.format().getOptions()))
+    @Test
+    def void evaluationFormatTest() {
+        val module = parseHelper.parse(
+        '''
+            module evaluation
+                 
+            12 + 6 * 19;
+            
+            15 * 44 + 12 ;
+        ''')
+
+        val evaluation = module.statements.last as Evaluation
+
+        evaluation.assertSerializedEquals('''15 * 44 + 12''')
+        evaluation.expression.assertSerializedEquals('''15 * 44 + 12''')
     }
 
+    def void assertFormattedEquals(String input, String expectedFormat) {
+        val module = parseHelper.parse(input)
+        module.assertSerializedEquals(expectedFormat)
+    }
+
+    def void assertSerializedEquals(EObject module, String expectedFormat) {
+        assertEquals(expectedFormat, module?.serialize(SaveOptions::newBuilder.format().getOptions()))
+    }
 }

@@ -21,13 +21,17 @@ class ArithmeticsFormatter extends AbstractFormatter2 {
 
     def dispatch void format(Module module, extension IFormattableDocument document) {
         document.prepend(module, [noSpace])
-        module.allRegionsFor.keyword('module').prepend[noSpace].append[oneSpace]
-        module.allRegionsFor.assignment(moduleAccess.nameAssignment_1_1).prepend[oneSpace].append[noSpace; newLine]
-        module.allRegionsFor.keyword(moduleAccess.semicolonKeyword_3_1_0).prepend[noSpace].append[newLine; noSpace]
-        module.regionFor.keyword(moduleAccess.semicolonKeyword_3_2).prepend[noSpace].append[newLine; noSpace]
+        module.regionFor.keyword('module').prepend[noSpace].append[oneSpace]
+        module.regionFor.assignment(moduleAccess.nameAssignment_1_1).prepend[oneSpace].append[highPriority; noSpace; newLine]
+
+        for (region : module.allRegionsFor.keywords(";")) {
+            region.prepend[noSpace].append[highPriority; noSpace; newLine]
+        }
+
         for (Import imports : module.getImports()) {
             imports.format;
         }
+
         for (Statement statements : module.getStatements()) {
             statements.format;
         }
@@ -41,16 +45,20 @@ class ArithmeticsFormatter extends AbstractFormatter2 {
 
     def dispatch void format(Definition definition, extension IFormattableDocument document) {
         definition.regionFor.keyword("def").prepend[newLine; noSpace].append[oneSpace]
-        definition.allRegionsFor.keyword("(").prepend[noSpace].append[noSpace]
-        definition.allRegionsFor.keyword(",").prepend[noSpace].append[oneSpace]
-        definition.allRegionsFor.keyword(")").prepend[noSpace]
+        definition.regionFor.keyword("(").prepend[noSpace].append[noSpace]
+        for (region : definition.allRegionsFor.keywords(",")) {
+            region.prepend[noSpace].append[oneSpace]
+        }
+        definition.regionFor.keyword(")").prepend[noSpace]
         definition.regionFor.keyword(":").prepend[noSpace].append[oneSpace; highPriority]
 
+        definition.expr.prepend[oneSpace].append[noSpace]
         definition.expr.format;
     }
 
     def dispatch void format(Evaluation evaluation, extension IFormattableDocument document) {
-        evaluation.prepend[newLine; noSpace]
+        evaluation.prepend[noSpace]
+        evaluation.expression.prepend[noSpace].append[noSpace]
         evaluation.expression.format
     }
 
@@ -86,18 +94,20 @@ class ArithmeticsFormatter extends AbstractFormatter2 {
         expression.regionFor.crossRef(primaryExpressionAccess.funcAbstractDefinitionCrossReference_2_1_0)
         expression.formatParentheses(document)
         val leftFunctionPar = primaryExpressionAccess.leftParenthesisKeyword_2_2_0
-        expression.allRegionsFor.keyword(leftFunctionPar).prepend[noSpace].append[noSpace]
-        expression.allRegionsFor.keyword(",").prepend[noSpace].append[oneSpace]
+        expression.regionFor.keyword(leftFunctionPar).prepend[noSpace].append[noSpace]
+        for (region : expression.allRegionsFor.keywords(",")) {
+            region.prepend[noSpace].append[oneSpace]
+        }
         val rightFunctionPar = primaryExpressionAccess.rightParenthesisKeyword_2_2_3
-        expression.allRegionsFor.keyword(rightFunctionPar).prepend[noSpace].append[noSpace]
+        expression.regionFor.keyword(rightFunctionPar).prepend[noSpace].append[noSpace]
 
         expression.args.forEach[format]
     }
 
     def void formatParentheses(Expression expression, extension IFormattableDocument document) {
         val leftPar = primaryExpressionAccess.leftParenthesisKeyword_0_0
-        expression.allRegionsFor.keyword(leftPar).prepend[noSpace].append[noSpace]
+        expression.regionFor.keyword(leftPar).prepend[noSpace].append[noSpace]
         val rightPar = primaryExpressionAccess.rightParenthesisKeyword_0_2
-        expression.allRegionsFor.keyword(rightPar).prepend[noSpace].append[noSpace]
+        expression.regionFor.keyword(rightPar).prepend[noSpace].append[noSpace]
     }
 }

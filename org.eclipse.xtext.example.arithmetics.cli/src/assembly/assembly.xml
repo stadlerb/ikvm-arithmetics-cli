@@ -11,21 +11,21 @@
 	<fileSets>
 		<fileSet>
 			<directory>${project.parent.basedir}</directory>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory></outputDirectory>
 			<includes>
 				<include>LICENSE.txt</include>
 			</includes>
 		</fileSet>
 		<fileSet>
 			<directory>${project.basedir}/example</directory>
-			<outputDirectory>/example</outputDirectory>
+			<outputDirectory>example</outputDirectory>
 			<includes>
 				<include>*</include>
 			</includes>
 		</fileSet>
 		<fileSet>
 			<directory>${project.build.directory}</directory>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory></outputDirectory>
 			<includes>
 				<include>*.dll</include>
 			</includes>
@@ -34,6 +34,7 @@
 	<files>
 		<file>
 			<source>${project.build.directory}/${project.artifactId}.exe</source>
+			
 			<destName>calculate.exe</destName>
 			<fileMode>0755</fileMode>
 		</file>

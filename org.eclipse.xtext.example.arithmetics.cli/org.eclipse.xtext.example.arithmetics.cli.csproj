@@ -188,7 +188,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="org.eclipse.xtext.example.arithmetics.dotnet">
+    <Reference Include="org.eclipse.xtext.example.arithmetics.dotnet, Version=0.0.0.0, Culture=neutral, PublicKeyToken=fd18d8159d01ff74, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\org.eclipse.xtext.example.arithmetics.dotnet\target\org.eclipse.xtext.example.arithmetics.dotnet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
