@@ -20,6 +20,9 @@ Workflow {
 				baseName = "org.eclipse.xtext.example.arithmetics"
 				rootPath = rootPath
                 mavenLayout = true
+                runtimeTest = {
+                    enabled = true
+                }
 			}
 			code = {
 				encoding = "UTF-8"
@@ -42,6 +45,10 @@ Workflow {
 			}
 			validator = {
 				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+			}
+			formatter = {
+			    generateStub = true
+			    generateXtendStub = true
 			}
 		}
 	}

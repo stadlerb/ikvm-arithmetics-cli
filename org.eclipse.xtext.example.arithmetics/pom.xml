@@ -38,6 +38,12 @@
 			<version>${xtextVersion}</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<version>${xtextVersion}</version>
+			<artifactId>org.eclipse.xtext.junit4</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 
@@ -50,6 +56,12 @@
 					<filesets combine.children="append">
 						<fileset>
 							<directory>${basedir}/../org.eclipse.xtext.example.arithmetics/src/main/xtext-gen/</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>${basedir}/../org.eclipse.xtext.example.arithmetics/src/test/xtext-gen/</directory>
 							<includes>
 								<include>**/*</include>
 							</includes>
@@ -86,11 +98,31 @@
 							</resources>
 						</configuration>
 					</execution>
+					<execution>
+						<id>add-test-source</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>add-test-source</goal>
+							<goal>add-test-resource</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/test/xtext-gen</source>
+							</sources>
+							<resources>
+								<resource>
+									<directory>src/test/xtext-gen</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.5.5</version>
 				<configuration>
 					<descriptors>
 						<descriptor>jar-with-ecore-model.xml</descriptor>
