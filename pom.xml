@@ -140,6 +140,11 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.npanday.plugins</groupId>
+					<artifactId>maven-resolver-plugin</artifactId>
+					<version>${npandayVersion}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.npanday.plugins</groupId>
 					<artifactId>library-importer-maven-plugin</artifactId>
 					<version>${npandayVersion}</version>
 					<extensions>true</extensions>
