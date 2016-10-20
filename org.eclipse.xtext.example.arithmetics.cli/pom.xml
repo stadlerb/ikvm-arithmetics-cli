@@ -10,11 +10,10 @@
 	</parent>
 
 	<artifactId>org.eclipse.xtext.example.arithmetics.cli</artifactId>
-	<packaging>library</packaging>
+	<packaging>dotnet-executable</packaging>
 
 	<properties>
 		<ikvm.version>8.1.5717</ikvm.version>
-		<rootDir>${project.parent.basedir}</rootDir>
 	</properties>
 
 	<dependencies>
@@ -221,9 +220,7 @@
 							</parameters>
 							<attachPdb>true</attachPdb>
 							<main>ArithmeticsCLI.CalculatorCLI</main>
-							<artifactType>dotnet-executable</artifactType>
 							<keyfile>${keyFilePath}</keyfile>
-							
 						</configuration>
 					</execution>
 				</executions>
@@ -236,7 +233,7 @@
 						<goals>
 							<goal>copy-dependencies</goal>
 						</goals>
-						<phase>package</phase>
+						<phase>prepare-package</phase>
 						<configuration>
 							<outputDirectory>${project.build.directory}</outputDirectory>
 							<includeTypes>library</includeTypes>
@@ -262,22 +259,5 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 </project>

@@ -172,7 +172,7 @@ namespace ArithmeticsCLI {
             foreach (var resource in rootModule.eResource().getResourceSet().getResources().wrap<Resource>()) {
                 if (!resource.Equals(inputResource)) {
                     var contextRoot = resource.getContents().head<org.eclipse.xtext.example.arithmetics.arithmetics.Module>();
-                    var context = contextRoot as org.eclipse.xtext.example.arithmetics.arithmetics.Module;
+                    var context = contextRoot;
                     var import = ArithmeticsFactory.eINSTANCE.createImport();
                     import.setModule(context);
                     imports.add(import);

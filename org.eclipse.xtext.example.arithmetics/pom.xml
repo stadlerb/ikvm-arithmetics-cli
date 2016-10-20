@@ -12,7 +12,6 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<rootDir>${project.parent.basedir}</rootDir>
 	</properties>
 
 	<dependencies>
@@ -45,7 +44,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 
 	<build>
 		<plugins>

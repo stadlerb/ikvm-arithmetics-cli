@@ -11,8 +11,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<xtextVersion>2.10.0</xtextVersion>
+		<npandayVersion>1.5.0-incubating-SNAPSHOT</npandayVersion>
 		<!-- This has to be overridden in any child project which uses ${rootDir} -->
-		<rootDir>${project.basedir}</rootDir>
 		<keyFileName>sample.snk</keyFileName>
 		<keyFilePath>${rootDir}/${keyFileName}</keyFilePath>
 	</properties>
@@ -20,8 +20,9 @@
 	<modules>
 		<module>org.eclipse.xtext.example.arithmetics</module>
 		<module>org.eclipse.xtext.example.arithmetics.dotnet</module>
-		<!-- Cannot be included due to plugin bug, so please build manually in 
-			the project directory -->
+		<!-- Required but cannot be included due to plugin bug. -->
+		<!-- Please invoke mvn install manually once in the project direc- -->
+		<!-- tory org.eclipse.xtext.example.arithmetics.cli.dependencies -->
 		<!-- <module>org.eclipse.xtext.example.arithmetics.cli.dependencies</module> -->
 		<module>org.eclipse.xtext.example.arithmetics.cli</module>
 	</modules>
@@ -32,6 +33,27 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.commonjava.maven.plugins</groupId>
+				<artifactId>directory-maven-plugin</artifactId>
+				<version>0.1</version>
+				<executions>
+					<execution>
+						<id>setRootDir</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>directory-of</goal>
+						</goals>
+						<configuration>
+							<project>
+								<groupId>org.eclipse.xtext.example.arithmetics</groupId>
+								<artifactId>org.eclipse.xtext.example.arithmetics.parent</artifactId>
+							</project>
+							<property>rootDir</property>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -100,7 +122,7 @@
 				<plugin>
 					<groupId>org.apache.npanday.plugins</groupId>
 					<artifactId>maven-compile-plugin</artifactId>
-					<version>1.5.0-incubating-SNAPSHOT</version>
+					<version>${npandayVersion}</version>
 					<extensions>true</extensions>
 					<executions>
 						<execution>
@@ -119,7 +141,7 @@
 				<plugin>
 					<groupId>org.apache.npanday.plugins</groupId>
 					<artifactId>library-importer-maven-plugin</artifactId>
-					<version>1.5.0-incubating-SNAPSHOT</version>
+					<version>${npandayVersion}</version>
 					<extensions>true</extensions>
 				</plugin>
 				<plugin>
@@ -200,7 +222,7 @@
 											maven-compile-plugin
 										</artifactId>
 										<versionRange>
-											[1.4.0-incubating,)
+											[0.0.0,)
 										</versionRange>
 										<goals>
 											<goal>compile</goal>
@@ -228,7 +250,7 @@
 											maven-resgen-plugin
 										</artifactId>
 										<versionRange>
-											[1.4.0-incubating,)
+											[0.0.0,)
 										</versionRange>
 										<goals>
 											<goal>copy-resources</goal>
@@ -251,7 +273,7 @@
 											maven-resolver-plugin
 										</artifactId>
 										<versionRange>
-											[1.4.0-incubating,)
+											[0.0.0,)
 										</versionRange>
 										<goals>
 											<goal>resolve</goal>
@@ -270,7 +292,7 @@
 											maven-test-plugin
 										</artifactId>
 										<versionRange>
-											[1.5.0-incubating-SNAPSHOT,)
+											[0.0.0,)
 										</versionRange>
 										<goals>
 											<goal>
@@ -291,7 +313,7 @@
 											NPanday.Plugin.Settings.JavaBinding
 										</artifactId>
 										<versionRange>
-											[1.4.0-incubating,)
+											[0.0.0,)
 										</versionRange>
 										<goals>
 											<goal>generate-settings</goal>
