@@ -12,19 +12,20 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<xtextVersion>2.10.0</xtextVersion>
 		<npandayVersion>1.5.0-incubating-SNAPSHOT</npandayVersion>
-		<!-- This has to be overridden in any child project which uses ${rootDir} -->
-		<keyFileName>sample.snk</keyFileName>
-		<keyFilePath>${rootDir}/${keyFileName}</keyFilePath>
 	</properties>
 
 	<modules>
 		<module>org.eclipse.xtext.example.arithmetics</module>
 		<module>org.eclipse.xtext.example.arithmetics.dotnet</module>
-		<!-- Required but cannot be included due to plugin bug. -->
-		<!-- Please invoke mvn install manually once in the project direc- -->
-		<!-- tory org.eclipse.xtext.example.arithmetics.cli.dependencies -->
+		
+		<!-- Required for org.eclipse.xtext.example.arithmetics.cli, -->
+		<!-- but not be included due to plugin bug and snapshot dependency. -->
+		<!-- Please download NuGet, add it to your PATH and invoke "mvn install" manu- -->
+		<!-- ally in directory org.eclipse.xtext.example.arithmetics.cli.dependencies -->
 		<!-- <module>org.eclipse.xtext.example.arithmetics.cli.dependencies</module> -->
-		<module>org.eclipse.xtext.example.arithmetics.cli</module>
+		
+		<!-- Not included due to snapshot dependency -->
+		<!-- <module>org.eclipse.xtext.example.arithmetics.cli</module> -->
 	</modules>
 
 	<build>
@@ -118,36 +119,6 @@
 						<outputDirectory>${basedir}/src/main/xtend-gen</outputDirectory>
 						<testOutputDirectory>${basedir}/src/test/xtend-gen</testOutputDirectory>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.npanday.plugins</groupId>
-					<artifactId>maven-compile-plugin</artifactId>
-					<version>${npandayVersion}</version>
-					<extensions>true</extensions>
-					<executions>
-						<execution>
-							<id>default-compile</id>
-							<configuration>
-								<frameworkVersion>4.5.1</frameworkVersion>
-								<optionStrict>false</optionStrict>
-								<isDebug>true</isDebug>
-								<parameters>
-									<parameter>/warnaserror-</parameter>
-								</parameters>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.npanday.plugins</groupId>
-					<artifactId>maven-resolver-plugin</artifactId>
-					<version>${npandayVersion}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.npanday.plugins</groupId>
-					<artifactId>library-importer-maven-plugin</artifactId>
-					<version>${npandayVersion}</version>
-					<extensions>true</extensions>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -350,6 +321,25 @@
 										<ignore></ignore>
 									</action>
 								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.commonjava.maven.plugins
+										</groupId>
+										<artifactId>
+											directory-maven-plugin
+										</artifactId>
+										<versionRange>
+											[0.1,)
+										</versionRange>
+										<goals>
+											<goal>directory-of</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute />
+									</action>
+								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -357,6 +347,21 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>dotnet-sign</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- To sign, place your key in this directory and override this with 
+					your key name using -DkeyFileName=... -->
+				<keyFileName>keypair.snk</keyFileName>
+				<keyFilePath>${rootDir}/${keyFileName}</keyFilePath>
+			</properties>
+		</profile>
+	</profiles>
 
 	<repositories>
 		<repository>

@@ -211,16 +211,20 @@
 			<plugin>
 				<groupId>org.apache.npanday.plugins</groupId>
 				<artifactId>maven-compile-plugin</artifactId>
+				<version>${npandayVersion}</version>
+				<extensions>true</extensions>
 				<executions>
 					<execution>
 						<id>default-compile</id>
 						<configuration>
+							<optionStrict>false</optionStrict>
+							<frameworkVersion>4.5.1</frameworkVersion>
 							<parameters>
+								<parameter>/warnaserror-</parameter>
 								<parameter>/langversion:6</parameter>
 							</parameters>
 							<attachPdb>true</attachPdb>
 							<main>ArithmeticsCLI.CalculatorCLI</main>
-							<keyfile>${keyFilePath}</keyfile>
 						</configuration>
 					</execution>
 				</executions>
@@ -260,4 +264,49 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>dotnet-debug</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.npanday.plugins</groupId>
+						<artifactId>maven-compile-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>default-compile</id>
+								<configuration combine.children="append">
+									<isDebug>true</isDebug>
+									<attachPdb>true</attachPdb>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>dotnet-sign</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.npanday.plugins</groupId>
+						<artifactId>maven-compile-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>default-compile</id>
+								<configuration>
+									<keyfile>${keyFilePath}</keyfile>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

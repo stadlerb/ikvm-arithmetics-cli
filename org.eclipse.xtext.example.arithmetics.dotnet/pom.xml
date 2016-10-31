@@ -1,6 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.eclipse.xtext.example.arithmetics</groupId>
 		<artifactId>org.eclipse.xtext.example.arithmetics.parent</artifactId>
@@ -20,6 +21,7 @@
 			<groupId>org.eclipse.xtext.example.arithmetics</groupId>
 			<artifactId>org.eclipse.xtext.example.arithmetics</artifactId>
 			<version>${project.version}</version>
+			<scope>optional</scope>
 		</dependency>
 	</dependencies>
 
@@ -71,7 +73,6 @@
 							<workingDirectory>${project.build.directory}</workingDirectory>
 							<arguments>
 								<argument>-target:library</argument>
-								<argument>-keyfile:${keyFilePath}</argument>
 								<argument>-out:${project.artifactId}.dll</argument>
 								<argument>${project.build.finalName}-shaded.jar</argument>
 							</arguments>
@@ -104,50 +105,68 @@
 
 	<profiles>
 		<profile>
-			<id>ikvm-debug</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+			<id>dotnet-debug</id>
 			<build>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>exec-maven-plugin</artifactId>
-							<version>1.4.0</version>
-							<executions>
-								<execution>
-									<id>ikvmCompile</id>
-									<configuration>
-										<arguments combine.children="append">
-											<argument>-debug</argument>
-										</arguments>
-									</configuration>
-								</execution>
-							</executions>
-						</plugin>
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>build-helper-maven-plugin</artifactId>
-							<executions>
-								<execution>
-									<id>ikvmAttach</id>
-									<goals>
-										<goal>attach-artifact</goal>
-									</goals>
-									<configuration>
-										<artifacts combine.children="append">
-											<artifact>
-												<file>${project.build.directory}/${project.artifactId}.pdb</file>
-												<type>pdb</type>
-											</artifact>
-										</artifacts>
-									</configuration>
-								</execution>
-							</executions>
-						</plugin>
-					</plugins>
-				</pluginManagement>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>ikvmCompile</id>
+								<configuration>
+									<arguments combine.children="append">
+										<argument>-debug</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>ikvmAttach</id>
+								<goals>
+									<goal>attach-artifact</goal>
+								</goals>
+								<configuration>
+									<artifacts combine.children="append">
+										<artifact>
+											<file>${project.build.directory}/${project.artifactId}.pdb</file>
+											<type>pdb</type>
+										</artifact>
+									</artifacts>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>dotnet-sign</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>ikvmCompile</id>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<arguments combine.children="append">
+										<argument>-keyfile:${keyFilePath}</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
 			</build>
 		</profile>
 	</profiles>

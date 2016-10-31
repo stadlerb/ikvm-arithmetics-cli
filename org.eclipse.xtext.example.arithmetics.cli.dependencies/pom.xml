@@ -8,12 +8,14 @@
 	</parent>
 	<artifactId>org.eclipse.xtext.example.arithmetics.cli.dependencies</artifactId>
 	<packaging>dotnet-library-importer</packaging>
+	<!-- NOTE: Make sure nuget.exe is available on your PATH -->
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.npanday.plugins</groupId>
 				<artifactId>library-importer-maven-plugin</artifactId>
-				<version>1.5.0-incubating-SNAPSHOT</version><!--$NO-MVN-MAN-VER$ -->
+				<version>${npandayVersion}</version>
+				<extensions>true</extensions>
 			</plugin>
 		</plugins>
 	</build>
