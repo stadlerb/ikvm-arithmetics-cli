@@ -21,7 +21,7 @@
 			<groupId>org.eclipse.xtext.example.arithmetics</groupId>
 			<artifactId>org.eclipse.xtext.example.arithmetics</artifactId>
 			<version>${project.version}</version>
-			<scope>optional</scope>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
