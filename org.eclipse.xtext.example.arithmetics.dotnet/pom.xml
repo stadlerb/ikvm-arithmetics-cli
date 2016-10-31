@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.eclipse.xtext.example.arithmetics</groupId>
 		<artifactId>org.eclipse.xtext.example.arithmetics.parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.eclipse.xtext.example.arithmetics.dotnet</artifactId>
 	<packaging>pom</packaging>
